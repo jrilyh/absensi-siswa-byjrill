@@ -2,980 +2,334 @@
 <html lang="id">
 
 <head>
+    <meta charset="UTF-8">
 
-<meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+    <title>Absensi Siswa</title>
 
-<title>Absensi Siswa</title>
+    <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style.css">
-
-<script
-src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-</script>
-
-<script>
-
-emailjs.init({
-    publicKey: "h93S9FC0EV8u-rJcB"
-});
-
-</script>
-
-<style>
-
-/* =========================
-   PILIHAN KELAS
-========================= */
-
-#kelas {
-
-    width: 100%;
-
-    padding: 14px;
-
-    border-radius: 12px;
-
-    border: 2px solid #ddd;
-
-    font-size: 16px;
-
-    margin-top: 8px;
-
-    background: white;
-
-}
-
-
-/* =========================
-   STATUS
-========================= */
-
-.status-group {
-
-    margin: 20px 0;
-
-}
-
-
-.status-group > label {
-
-    display: block;
-
-    margin-bottom: 10px;
-
-}
-
-
-.status-options {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 12px;
-
-}
-
-
-.status-option input {
-
-    display: none;
-
-}
-
-
-.status-option span {
-
-    display: block;
-
-    text-align: center;
-
-    padding: 16px 10px;
-
-    border: 2px solid #ddd;
-
-    border-radius: 16px;
-
-    background: white;
-
-    cursor: pointer;
-
-    font-size: 28px;
-
-    transition: 0.2s;
-
-}
-
-
-.status-option span b {
-
-    display: block;
-
-    font-size: 15px;
-
-    margin-top: 5px;
-
-}
-
-
-.status-option input:checked + span {
-
-    border-color: #4f46e5;
-
-    background: #eef2ff;
-
-    transform: scale(1.03);
-
-}
-
-
-.status-option span:hover {
-
-    transform: scale(1.03);
-
-}
-
-
-/* =========================
-   CONFETTI
-========================= */
-
-.confetti {
-
-    position: fixed;
-
-    top: -20px;
-
-    width: 10px;
-
-    height: 16px;
-
-    z-index: 99999;
-
-    pointer-events: none;
-
-    animation:
-        confettiFall
-        linear
-        forwards;
-
-}
-
-
-@keyframes confettiFall {
-
-    0% {
-
-        transform:
-            translateY(-20px)
-            rotate(0deg);
-
-        opacity: 1;
-
-    }
-
-    100% {
-
-        transform:
-            translateY(110vh)
-            rotate(720deg);
-
-        opacity: 0;
-
-    }
-
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 480px) {
-
-    .status-options {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
-    }
-
-}
-
-/* Kolom kelas transparan */
-#kelas {
-  width: 100%;
-  padding: 14px 16px;
-  box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 12px;
-  color: white;
-  outline: none;
-  backdrop-filter: blur(8px);
-}
-
-#kelas::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-#kelas:focus {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.8);
-}
-
-/* Button transparan */
-#btnKirim {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  color: white;
-  backdrop-filter: blur(8px);
-  transition: 0.3s;
-}
-
-#btnKirim:hover {
-  background: rgba(255, 255, 255, 0.28);
-  transform: translateY(-2px);
-}
-      
-</style>
+    <!-- EMAILJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 </head>
 
 
 <body>
 
-<div class="background"></div>
+    <!-- BACKGROUND -->
+    <div class="background"></div>
 
 
-<main class="container">
+    <main class="container">
 
 
-<!-- =========================
-     HEADER
-========================= -->
+        <!-- =========================
+             HEADER
+        ========================== -->
 
-<section class="header">
+        <section class="header">
 
-    <div class="logo">
-        📚
-    </div>
+            <div class="logo">
+                📚
+            </div>
 
-    <h1>
-        ABSENSI SISWA
-    </h1>
-
-    <p>
-        Silakan isi nama dan konfirmasi kehadiran
-    </p>
-
-
-    <div class="date-box">
-
-        <span id="tanggal">
-            Memuat tanggal...
-        </span>
-
-        <span>•</span>
-
-        <span id="jam">
-            00:00:00
-        </span>
-
-        <b>
-            WIB
-        </b>
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     FORM ABSENSI
-========================= -->
-
-<section class="attendance-card">
-
-
-    <!-- NAMA -->
-
-    <div class="input-group">
-
-        <label>
-            Nama Siswa
-        </label>
-
-        <input
-            type="text"
-            id="nama"
-            placeholder="Masukkan nama kamu..."
-            autocomplete="off"
-        >
-
-    </div>
-
-
-    <!-- KELAS -->
-
-    <div class="status-group">
-
-        <label>
-
-            <strong>
-                🏫 Pilih Kelas
-            </strong>
-
-        </label>
-
-
-        
-            </option>
-<input
-  type="text"
-  id="kelas"
-  placeholder="Contoh: X-DKV 4"
-  autocomplete="off"
->
-
-    </div>
-
-
-    <!-- STATUS -->
-
-    <div class="status-group">
-
-        <label>
-
-            <strong>
-                📋 Status Kehadiran
-            </strong>
-
-        </label>
-
-
-        <div class="status-options">
-
-
-            <!-- HADIR -->
-
-            <label class="status-option">
-
-                <input
-                    type="radio"
-                    name="status"
-                    value="HADIR"
-                    checked
-                >
-
-                <span>
-
-                    😊
-
-                    <b>
-                        Hadir
-                    </b>
-
-                </span>
-
-            </label>
-
-
-            <!-- SAKIT -->
-
-            <label class="status-option">
-
-                <input
-                    type="radio"
-                    name="status"
-                    value="SAKIT"
-                >
-
-                <span>
-
-                    🤒
-
-                    <b>
-                        Sakit
-                    </b>
-
-                </span>
-
-            </label>
-
-
-            <!-- IZIN -->
-
-            <label class="status-option">
-
-                <input
-                    type="radio"
-                    name="status"
-                    value="IZIN"
-                >
-
-                <span>
-
-                    📝
-
-                    <b>
-                        Izin
-                    </b>
-
-                </span>
-
-            </label>
-
-
-            <!-- ALPA -->
-
-            <label class="status-option">
-
-                <input
-                    type="radio"
-                    name="status"
-                    value="ALPA"
-                >
-
-                <span>
-
-                    ❌
-
-                    <b>
-                        Alpa
-                    </b>
-
-                </span>
-
-            </label>
-
-
-        </div>
-
-    </div>
-
-
-    <!-- KIRIM -->
-
-    <button id="btnKirim">
-
-        <span>
-            ✓
-        </span>
-
-        KIRIM ABSENSI
-
-    </button>
-
-
-    <p id="pesan"></p>
-
-
-</section>
-
-
-<!-- =========================
-     DAFTAR
-========================= -->
-
-<section class="list-card">
-
-
-    <div class="list-header">
-
-        <div>
-
-            <h2>
-                📋 Daftar Kehadiran
-            </h2>
+            <h1>
+                ABSENSI SISWA
+            </h1>
 
             <p>
-                Siswa yang sudah mengisi absensi
+                Silakan isi data kehadiran kamu
             </p>
 
-        </div>
+            <div class="date-box">
 
+                <span id="tanggal">
+                    Memuat tanggal...
+                </span>
 
-        <div class="total">
+                <span>•</span>
 
-            <span id="jumlah">
-                0
-            </span>
+                <span id="jam">
+                    00:00:00
+                </span>
 
-            <small>
-                Siswa
-            </small>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="daftarAbsensi"
-        class="attendance-list">
-    </div>
-
-
-    <button
-        id="btnHapus"
-        class="delete-button">
-
-        🗑 Hapus Semua Data
-
-    </button>
-
-
-</section>
-
-
-<footer>
-
-    Absensi Siswa •
-
-    Waktu Indonesia Barat (WIB)
-
-</footer>
-
-
-</main>
-
-
-<script>
-
-
-/* =========================
-   KONFIGURASI
-========================= */
-
-const SERVICE_ID =
-    "service_0j76nj5";
-
-const TEMPLATE_ID =
-    "template_u46s6wk";
-
-
-/* =========================
-   ELEMENT
-========================= */
-
-const namaInput =
-    document.getElementById("nama");
-
-const kelasInput =
-    document.getElementById("kelas");
-
-const btnKirim =
-    document.getElementById("btnKirim");
-
-const pesan =
-    document.getElementById("pesan");
-
-const tanggalElement =
-    document.getElementById("tanggal");
-
-const jamElement =
-    document.getElementById("jam");
-
-const daftarAbsensi =
-    document.getElementById("daftarAbsensi");
-
-const jumlahElement =
-    document.getElementById("jumlah");
-
-const btnHapus =
-    document.getElementById("btnHapus");
-
-
-/* =========================
-   DATA
-========================= */
-
-let dataAbsensi =
-    JSON.parse(
-        localStorage.getItem(
-            "dataAbsensi"
-        )
-    ) || [];
-
-
-/* =========================
-   WAKTU WIB
-========================= */
-
-function getWaktuWIB() {
-
-    const sekarang =
-        new Date();
-
-
-    const tanggal =
-        new Intl.DateTimeFormat(
-            "id-ID",
-            {
-
-                timeZone:
-                    "Asia/Jakarta",
-
-                weekday:
-                    "long",
-
-                day:
-                    "2-digit",
-
-                month:
-                    "long",
-
-                year:
-                    "numeric"
-
-            }
-        ).format(sekarang);
-
-
-    const waktu =
-        new Intl.DateTimeFormat(
-            "id-ID",
-            {
-
-                timeZone:
-                    "Asia/Jakarta",
-
-                hour:
-                    "2-digit",
-
-                minute:
-                    "2-digit",
-
-                second:
-                    "2-digit",
-
-                hour12:
-                    false
-
-            }
-        ).format(sekarang);
-
-
-    return {
-
-        tanggal,
-
-        waktu
-
-    };
-
-}
-
-
-/* =========================
-   JAM
-========================= */
-
-function updateJam() {
-
-    const waktu =
-        getWaktuWIB();
-
-
-    tanggalElement.textContent =
-        waktu.tanggal;
-
-
-    jamElement.textContent =
-        waktu.waktu;
-
-}
-
-
-updateJam();
-
-
-setInterval(
-    updateJam,
-    1000
-);
-
-
-/* =========================
-   SIMPAN
-========================= */
-
-function simpanData() {
-
-    localStorage.setItem(
-
-        "dataAbsensi",
-
-        JSON.stringify(
-            dataAbsensi
-        )
-
-    );
-
-}
-
-
-/* =========================
-   TAMPILKAN
-========================= */
-
-function tampilkanAbsensi() {
-
-
-    jumlahElement.textContent =
-        dataAbsensi.length;
-
-
-    if (
-        dataAbsensi.length === 0
-    ) {
-
-        daftarAbsensi.innerHTML = `
-
-            <div class="empty">
-
-                <div>
-                    📝
-                </div>
-
-                <p>
-                    Belum ada siswa yang absen
-                </p>
+                <b>WIB</b>
 
             </div>
 
-        `;
-
-        return;
-
-    }
+        </section>
 
 
-    daftarAbsensi.innerHTML =
-        "";
+
+        <!-- =========================
+             FORM ABSENSI
+        ========================== -->
+
+        <section class="attendance-card">
 
 
-    dataAbsensi.forEach(
-        siswa => {
+            <!-- NAMA -->
+
+            <div class="input-group">
+
+                <label>
+                    👤 Nama Siswa
+                </label>
+
+                <input
+                    type="text"
+                    id="nama"
+                    placeholder="Ketik nama kamu..."
+                    autocomplete="off"
+                >
+
+            </div>
 
 
-            const item =
-                document.createElement(
-                    "div"
-                );
+
+            <!-- KELAS -->
+
+            <div class="input-group">
+
+                <label>
+                    🏫 Kelas
+                </label>
+
+                <input
+                    type="text"
+                    id="kelas"
+                    placeholder="Contoh: 7A, 8B, 9C..."
+                    autocomplete="off"
+                >
+
+            </div>
 
 
-            item.className =
-                "student";
+
+            <!-- STATUS -->
+
+            <div class="status-group">
+
+                <label>
+                    📋 Status Kehadiran
+                </label>
 
 
-            const huruf =
-                siswa.nama
-                    .trim()
-                    .charAt(0)
-                    .toUpperCase();
+                <div class="status-options">
 
 
-            item.innerHTML = `
+                    <!-- HADIR -->
 
-                <div class="avatar">
+                    <label class="status-option">
 
-                    ${huruf}
+                        <input
+                            type="radio"
+                            name="status"
+                            value="HADIR"
+                            checked
+                        >
+
+                        <span>
+
+                            <span class="status-emoji">
+                                😊
+                            </span>
+
+                            <span class="status-text">
+                                Hadir
+                            </span>
+
+                        </span>
+
+                    </label>
+
+
+
+                    <!-- SAKIT -->
+
+                    <label class="status-option">
+
+                        <input
+                            type="radio"
+                            name="status"
+                            value="SAKIT"
+                        >
+
+                        <span>
+
+                            <span class="status-emoji">
+                                🤒
+                            </span>
+
+                            <span class="status-text">
+                                Sakit
+                            </span>
+
+                        </span>
+
+                    </label>
+
+
+
+                    <!-- IZIN -->
+
+                    <label class="status-option">
+
+                        <input
+                            type="radio"
+                            name="status"
+                            value="IZIN"
+                        >
+
+                        <span>
+
+                            <span class="status-emoji">
+                                📝
+                            </span>
+
+                            <span class="status-text">
+                                Izin
+                            </span>
+
+                        </span>
+
+                    </label>
+
+
+
+                    <!-- ALPA -->
+
+                    <label class="status-option">
+
+                        <input
+                            type="radio"
+                            name="status"
+                            value="ALPA"
+                        >
+
+                        <span>
+
+                            <span class="status-emoji">
+                                ❌
+                            </span>
+
+                            <span class="status-text">
+                                Alpa
+                            </span>
+
+                        </span>
+
+                    </label>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BUTTON -->
+
+            <button id="btnKirim">
+
+                <span>
+                    ✓
+                </span>
+
+                KIRIM ABSENSI
+
+            </button>
+
+
+
+            <!-- PESAN -->
+
+            <p id="pesan"></p>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             DAFTAR ABSENSI
+        ========================== -->
+
+        <section class="list-card">
+
+
+            <div class="list-header">
+
+                <div>
+
+                    <h2>
+                        📋 Daftar Kehadiran
+                    </h2>
+
+                    <p>
+                        Siswa yang sudah mengisi absensi
+                    </p>
 
                 </div>
 
 
-                <div class="student-info">
+                <div class="total">
 
-                    <strong>
-
-                        ${escapeHTML(
-                            siswa.nama
-                        )}
-
-                    </strong>
-
+                    <span id="jumlah">
+                        0
+                    </span>
 
                     <small>
-
-                        ${escapeHTML(
-                            siswa.kelas
-                        )}
-
-                        •
-
-                        ${escapeHTML(
-                            siswa.tanggal
-                        )}
-
-                        •
-
-                        ${escapeHTML(
-                            siswa.waktu
-                        )}
-
-                        WIB
-
+                        Siswa
                     </small>
 
                 </div>
 
-
-                <div class="status">
-
-                    ${escapeHTML(
-                        siswa.status
-                    )}
-
-                </div>
-
-            `;
+            </div>
 
 
-            daftarAbsensi
-                .appendChild(item);
 
-        }
-    );
-
-}
+            <div
+                id="daftarAbsensi"
+                class="attendance-list">
+            </div>
 
 
-/* =========================
-   SECURITY
-========================= */
 
-function escapeHTML(text) {
+            <button
+                id="btnHapus"
+                class="delete-button">
 
-    const div =
-        document.createElement(
-            "div"
-        );
+                🗑️ Hapus Semua Data
+
+            </button>
 
 
-    div.textContent =
-        text;
+        </section>
 
 
-    return div.innerHTML;
 
-}
+        <!-- FOOTER -->
 
+        <footer>
 
-/* =========================
-   CONFETTI 🎊
-========================= */
+            Absensi Siswa • Waktu Indonesia Barat (WIB)
 
-function tampilkanConfetti() {
+        </footer>
 
 
-    const warna = [
-
-        "#ff4757",
-        "#ffa502",
-        "#2ed573",
-        "#1e90ff",
-        "#a55eea",
-        "#ff6b81",
-        "#00d2d3"
-
-    ];
+    </main>
 
 
-    for (
-        let i = 0;
-        i < 120;
-        i++
-    ) {
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
 
 
-        const kertas =
-            document.createElement(
-                "div"
-            );
+</body>
 
-
-        kertas.className =
-            "confetti";
-
-
-        kertas.style.left =
-            Math.random() * 100 +
-            "vw";
-
-
-        kertas.style.background =
-            warna[
-                Math.floor(
-                    Math.random() *
-                    warna.length
-                )
-            ];
-
-
-        kertas.style.width =
-            Math.random() * 8 + 6 +
-            "px";
-
-
-        kertas.style.height =
-            Math.random() * 12 + 8 +
-            "px";
-
-
-        kertas.style.animationDuration =
-            Math.random() * 2 + 2 +
-            "s";
-
-
-        kertas.style.animationDelay =
-            Math.random() * 0.5 +
-            "s";
-
-
-        document.body.appendChild(
-            kertas
-        );
-
-
-        setTimeout(
-            () => {
-
-                kertas.remove();
-
-            },
-
-            4000
-
-        );
-
-    }
-
-}
-
-
-/* =========================
-   PESAN
-========================= */
-
-function tampilkanPesan(
-    teks,
-    tipe
-) {
-
-
-    pesan.textContent =
-        teks;
-
-
-    pesan.className =
-        tipe;
-
-
-    setTimeout(
-       
+</html>
