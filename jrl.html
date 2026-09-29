@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Absensi Siswa</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- EMAILJS -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+
+    <script>
+        emailjs.init({
+            publicKey: "h93S9FC0EV8u-rJcB"
+        });
+    </script>
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<main class="container">
+
+    <section class="header">
+
+        <div class="logo">
+            📚
+        </div>
+
+        <h1>ABSENSI SISWA</h1>
+
+        <p>
+            Silakan isi nama dan konfirmasi kehadiran
+        </p>
+
+        <div class="date-box">
+
+            <span id="tanggal">
+                Memuat tanggal...
+            </span>
+
+            <span>•</span>
+
+            <span id="jam">
+                00:00:00
+            </span>
+
+            <b>WIB</b>
+
+        </div>
+
+    </section>
+
+
+    <section class="attendance-card">
+
+        <div class="input-group">
+
+            <label>
+                Nama Siswa
+            </label>
+
+            <input
+                type="text"
+                id="nama"
+                placeholder="Masukkan nama kamu..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <label class="attendance-check">
+
+            <input
+                type="checkbox"
+                id="hadir"
+            >
+
+            <span class="custom-check">
+                ✓
+            </span>
+
+            <span>
+
+                <strong>
+                    Hadir
+                </strong>
+
+                <small>
+                    Saya menyatakan hadir hari ini
+                </small>
+
+            </span>
+
+        </label>
+
+
+        <button id="btnKirim">
+
+            <span>
+                ✓
+            </span>
+
+            KIRIM ABSENSI
+
+        </button>
+
+
+        <p id="pesan"></p>
+
+    </section>
+
+
+    <section class="list-card">
+
+        <div class="list-header">
+
+            <div>
+
+                <h2>
+                    📋 Daftar Kehadiran
+                </h2>
+
+                <p>
+                    Siswa yang sudah mengisi absensi
+                </p>
+
+            </div>
+
+
+            <div class="total">
+
+                <span id="jumlah">
+                    0
+                </span>
+
+                <small>
+                    Siswa
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="daftarAbsensi"
+            class="attendance-list">
+        </div>
+
+
+        <button
+            id="btnHapus"
+            class="delete-button">
+
+            🗑 Hapus Semua Data
+
+        </button>
+
+    </section>
+
+
+    <footer>
+
+        Absensi Siswa •
+        Waktu Indonesia Barat (WIB)
+
+    </footer>
+
+</main>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
