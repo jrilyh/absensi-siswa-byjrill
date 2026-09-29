@@ -206,6 +206,42 @@ emailjs.init({
 
 }
 
+/* Kolom kelas transparan */
+#kelas {
+  width: 100%;
+  padding: 14px 16px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  color: white;
+  outline: none;
+  backdrop-filter: blur(8px);
+}
+
+#kelas::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#kelas:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Button transparan */
+#btnKirim {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  color: white;
+  backdrop-filter: blur(8px);
+  transition: 0.3s;
+}
+
+#btnKirim:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+}
+      
 </style>
 
 </head>
@@ -302,7 +338,7 @@ emailjs.init({
 <input
   type="text"
   id="kelas"
-  placeholder="Contoh: 7A, 8B, 9C..."
+  placeholder="Contoh: X-DKV 4"
   autocomplete="off"
 >
 
