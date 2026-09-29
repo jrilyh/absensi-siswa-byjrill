@@ -1,24 +1,18 @@
 const SERVICE_ID = "service_0j76nj5";
 const TEMPLATE_ID = "template_u46s6wk";
 
+const namaInput = document.getElementById("nama");
 
-const namaInput =
-    document.getElementById("nama");
+const statusInputs =
+    document.querySelectorAll('input[name="status"]');
 
-const hadirCheckbox =
-    document.getElementById("hadir");
+const btnKirim = document.getElementById("btnKirim");
 
-const btnKirim =
-    document.getElementById("btnKirim");
+const pesan = document.getElementById("pesan");
 
-const pesan =
-    document.getElementById("pesan");
+const tanggalElement = document.getElementById("tanggal");
 
-const tanggalElement =
-    document.getElementById("tanggal");
-
-const jamElement =
-    document.getElementById("jam");
+const jamElement = document.getElementById("jam");
 
 const daftarAbsensi =
     document.getElementById("daftarAbsensi");
@@ -60,7 +54,6 @@ function getWaktuWIB() {
             }
         ).format(sekarang);
 
-
     const waktu =
         new Intl.DateTimeFormat(
             "id-ID",
@@ -72,7 +65,6 @@ function getWaktuWIB() {
                 hour12: false
             }
         ).format(sekarang);
-
 
     return {
         tanggal,
@@ -187,7 +179,9 @@ function tampilkanAbsensi() {
                 </div>
 
                 <div class="status">
-                    HADIR
+                    ${escapeHTML(
+                        siswa.status || "HADIR"
+                    )}
                 </div>
 
             `;
@@ -241,15 +235,25 @@ btnKirim.addEventListener(
         }
 
 
-        if (!hadirCheckbox.checked) {
+        const statusInput =
+            document.querySelector(
+                'input[name="status"]:checked'
+            );
+
+
+        if (!statusInput) {
 
             tampilkanPesan(
-                "Centang kehadiran terlebih dahulu!",
+                "Pilih status kehadiran terlebih dahulu!",
                 "error"
             );
 
             return;
         }
+
+
+        const status =
+            statusInput.value;
 
 
         const waktu =
@@ -304,7 +308,7 @@ btnKirim.addEventListener(
 
                 nama: nama,
 
-                status: "HADIR",
+                status: status,
 
                 tanggal:
                     waktu.tanggal,
@@ -334,7 +338,7 @@ btnKirim.addEventListener(
 
                 nama: nama,
 
-                status: "HADIR",
+                status: status,
 
                 tanggal:
                     waktu.tanggal,
@@ -357,8 +361,10 @@ btnKirim.addEventListener(
 
             namaInput.value = "";
 
-            hadirCheckbox.checked =
-                false;
+
+            document.querySelector(
+                'input[name="status"][value="HADIR"]'
+            ).checked = true;
 
 
             tampilkanPesan(
