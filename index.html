@@ -1,232 +1,956 @@
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Absensi Siswa</title>
+<meta charset="UTF-8">
 
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .status-group {
-            margin: 20px 0;
-        }
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-        .status-group > label {
-            display: block;
-            margin-bottom: 10px;
-        }
+<title>Absensi Siswa</title>
 
-        .status-options {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-        }
+<link rel="stylesheet" href="style.css">
 
-        .status-option {
-            cursor: pointer;
-        }
+<script
+src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
 
-        .status-option input {
-            display: none;
-        }
+<script>
 
-        .status-option span {
-            display: block;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 12px;
-            text-align: center;
-            background: #fff;
-            transition: 0.2s;
-        }
+emailjs.init({
+    publicKey: "h93S9FC0EV8u-rJcB"
+});
 
-        .status-option input:checked + span {
-            border-color: #4f46e5;
-            background: #eef2ff;
-            font-weight: 700;
-        }
+</script>
 
-        @media (max-width: 480px) {
-            .status-options {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<style>
 
-    <!-- EMAILJS -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-    </script>
+/* =========================
+   PILIHAN KELAS
+========================= */
 
-    <script>
-        emailjs.init({
-            publicKey: "h93S9FC0EV8u-rJcB"
-        });
-    </script>
+#kelas {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    border: 2px solid #ddd;
+
+    font-size: 16px;
+
+    margin-top: 8px;
+
+    background: white;
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-group {
+
+    margin: 20px 0;
+
+}
+
+
+.status-group > label {
+
+    display: block;
+
+    margin-bottom: 10px;
+
+}
+
+
+.status-options {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+
+}
+
+
+.status-option input {
+
+    display: none;
+
+}
+
+
+.status-option span {
+
+    display: block;
+
+    text-align: center;
+
+    padding: 16px 10px;
+
+    border: 2px solid #ddd;
+
+    border-radius: 16px;
+
+    background: white;
+
+    cursor: pointer;
+
+    font-size: 28px;
+
+    transition: 0.2s;
+
+}
+
+
+.status-option span b {
+
+    display: block;
+
+    font-size: 15px;
+
+    margin-top: 5px;
+
+}
+
+
+.status-option input:checked + span {
+
+    border-color: #4f46e5;
+
+    background: #eef2ff;
+
+    transform: scale(1.03);
+
+}
+
+
+.status-option span:hover {
+
+    transform: scale(1.03);
+
+}
+
+
+/* =========================
+   CONFETTI
+========================= */
+
+.confetti {
+
+    position: fixed;
+
+    top: -20px;
+
+    width: 10px;
+
+    height: 16px;
+
+    z-index: 99999;
+
+    pointer-events: none;
+
+    animation:
+        confettiFall
+        linear
+        forwards;
+
+}
+
+
+@keyframes confettiFall {
+
+    0% {
+
+        transform:
+            translateY(-20px)
+            rotate(0deg);
+
+        opacity: 1;
+
+    }
+
+    100% {
+
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+
+        opacity: 0;
+
+    }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+    .status-options {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+</style>
 
 </head>
+
 
 <body>
 
 <div class="background"></div>
 
+
 <main class="container">
 
-    <section class="header">
 
-        <div class="logo">
-            📚
-        </div>
+<!-- =========================
+     HEADER
+========================= -->
 
-        <h1>ABSENSI SISWA</h1>
+<section class="header">
 
-        <p>
-            Silakan isi nama dan konfirmasi kehadiran
-        </p>
+    <div class="logo">
+        📚
+    </div>
 
-        <div class="date-box">
+    <h1>
+        ABSENSI SISWA
+    </h1>
 
-            <span id="tanggal">
-                Memuat tanggal...
-            </span>
-
-            <span>•</span>
-
-            <span id="jam">
-                00:00:00
-            </span>
-
-            <b>WIB</b>
-
-        </div>
-
-    </section>
+    <p>
+        Silakan isi nama dan konfirmasi kehadiran
+    </p>
 
 
-    <section class="attendance-card">
+    <div class="date-box">
 
-        <div class="input-group">
+        <span id="tanggal">
+            Memuat tanggal...
+        </span>
 
-            <label>
-                Nama Siswa
-            </label>
+        <span>•</span>
 
-            <input
-                type="text"
-                id="nama"
-                placeholder="Masukkan nama kamu..."
-                autocomplete="off"
-            >
+        <span id="jam">
+            00:00:00
+        </span>
 
-        </div>
+        <b>
+            WIB
+        </b>
 
+    </div>
 
-        <div class="status-group">
-            <label>
-                <strong>Status Kehadiran</strong>
-            </label>
-
-            <div class="status-options">
-                <label class="status-option">
-                    <input type="radio" name="status" value="HADIR" checked>
-                    <span>✅ Hadir</span>
-                </label>
-
-                <label class="status-option">
-                    <input type="radio" name="status" value="SAKIT">
-                    <span>🤒 Sakit</span>
-                </label>
-
-                <label class="status-option">
-                    <input type="radio" name="status" value="IZIN">
-                    <span>📝 Izin</span>
-                </label>
-
-                <label class="status-option">
-                    <input type="radio" name="status" value="ALPA">
-                    <span>❌ Alpa</span>
-                </label>
-            </div>
-        </div>
+</section>
 
 
-        <button id="btnKirim">
+<!-- =========================
+     FORM ABSENSI
+========================= -->
 
-            <span>
-                ✓
-            </span>
-
-            KIRIM ABSENSI
-
-        </button>
+<section class="attendance-card">
 
 
-        <p id="pesan"></p>
+    <!-- NAMA -->
 
-    </section>
+    <div class="input-group">
 
+        <label>
+            Nama Siswa
+        </label>
 
-    <section class="list-card">
+        <input
+            type="text"
+            id="nama"
+            placeholder="Masukkan nama kamu..."
+            autocomplete="off"
+        >
 
-        <div class="list-header">
-
-            <div>
-
-                <h2>
-                    📋 Daftar Kehadiran
-                </h2>
-
-                <p>
-                    Siswa yang sudah mengisi absensi
-                </p>
-
-            </div>
+    </div>
 
 
-            <div class="total">
+    <!-- KELAS -->
 
-                <span id="jumlah">
-                    0
+    <div class="status-group">
+
+        <label>
+
+            <strong>
+                🏫 Pilih Kelas
+            </strong>
+
+        </label>
+
+
+        <select id="kelas">
+
+            <option value="">
+                -- Pilih Kelas --
+            </option>
+
+            <option value="Kelas 7">
+                Kelas 7
+            </option>
+
+            <option value="Kelas 8">
+                Kelas 8
+            </option>
+
+            <option value="Kelas 9">
+                Kelas 9
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="status-group">
+
+        <label>
+
+            <strong>
+                📋 Status Kehadiran
+            </strong>
+
+        </label>
+
+
+        <div class="status-options">
+
+
+            <!-- HADIR -->
+
+            <label class="status-option">
+
+                <input
+                    type="radio"
+                    name="status"
+                    value="HADIR"
+                    checked
+                >
+
+                <span>
+
+                    😊
+
+                    <b>
+                        Hadir
+                    </b>
+
                 </span>
 
-                <small>
-                    Siswa
-                </small>
+            </label>
 
-            </div>
+
+            <!-- SAKIT -->
+
+            <label class="status-option">
+
+                <input
+                    type="radio"
+                    name="status"
+                    value="SAKIT"
+                >
+
+                <span>
+
+                    🤒
+
+                    <b>
+                        Sakit
+                    </b>
+
+                </span>
+
+            </label>
+
+
+            <!-- IZIN -->
+
+            <label class="status-option">
+
+                <input
+                    type="radio"
+                    name="status"
+                    value="IZIN"
+                >
+
+                <span>
+
+                    📝
+
+                    <b>
+                        Izin
+                    </b>
+
+                </span>
+
+            </label>
+
+
+            <!-- ALPA -->
+
+            <label class="status-option">
+
+                <input
+                    type="radio"
+                    name="status"
+                    value="ALPA"
+                >
+
+                <span>
+
+                    ❌
+
+                    <b>
+                        Alpa
+                    </b>
+
+                </span>
+
+            </label>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- KIRIM -->
+
+    <button id="btnKirim">
+
+        <span>
+            ✓
+        </span>
+
+        KIRIM ABSENSI
+
+    </button>
+
+
+    <p id="pesan"></p>
+
+
+</section>
+
+
+<!-- =========================
+     DAFTAR
+========================= -->
+
+<section class="list-card">
+
+
+    <div class="list-header">
+
+        <div>
+
+            <h2>
+                📋 Daftar Kehadiran
+            </h2>
+
+            <p>
+                Siswa yang sudah mengisi absensi
+            </p>
 
         </div>
 
 
-        <div
-            id="daftarAbsensi"
-            class="attendance-list">
+        <div class="total">
+
+            <span id="jumlah">
+                0
+            </span>
+
+            <small>
+                Siswa
+            </small>
+
         </div>
 
-
-        <button
-            id="btnHapus"
-            class="delete-button">
-
-            🗑 Hapus Semua Data
-
-        </button>
-
-    </section>
+    </div>
 
 
-    <footer>
+    <div
+        id="daftarAbsensi"
+        class="attendance-list">
+    </div>
 
-        Absensi Siswa •
-        Waktu Indonesia Barat (WIB)
 
-    </footer>
+    <button
+        id="btnHapus"
+        class="delete-button">
+
+        🗑 Hapus Semua Data
+
+    </button>
+
+
+</section>
+
+
+<footer>
+
+    Absensi Siswa •
+
+    Waktu Indonesia Barat (WIB)
+
+</footer>
+
 
 </main>
 
 
-<script src="script.js"></script>
+<script>
 
-</body>
-</html>
+
+/* =========================
+   KONFIGURASI
+========================= */
+
+const SERVICE_ID =
+    "service_0j76nj5";
+
+const TEMPLATE_ID =
+    "template_u46s6wk";
+
+
+/* =========================
+   ELEMENT
+========================= */
+
+const namaInput =
+    document.getElementById("nama");
+
+const kelasInput =
+    document.getElementById("kelas");
+
+const btnKirim =
+    document.getElementById("btnKirim");
+
+const pesan =
+    document.getElementById("pesan");
+
+const tanggalElement =
+    document.getElementById("tanggal");
+
+const jamElement =
+    document.getElementById("jam");
+
+const daftarAbsensi =
+    document.getElementById("daftarAbsensi");
+
+const jumlahElement =
+    document.getElementById("jumlah");
+
+const btnHapus =
+    document.getElementById("btnHapus");
+
+
+/* =========================
+   DATA
+========================= */
+
+let dataAbsensi =
+    JSON.parse(
+        localStorage.getItem(
+            "dataAbsensi"
+        )
+    ) || [];
+
+
+/* =========================
+   WAKTU WIB
+========================= */
+
+function getWaktuWIB() {
+
+    const sekarang =
+        new Date();
+
+
+    const tanggal =
+        new Intl.DateTimeFormat(
+            "id-ID",
+            {
+
+                timeZone:
+                    "Asia/Jakarta",
+
+                weekday:
+                    "long",
+
+                day:
+                    "2-digit",
+
+                month:
+                    "long",
+
+                year:
+                    "numeric"
+
+            }
+        ).format(sekarang);
+
+
+    const waktu =
+        new Intl.DateTimeFormat(
+            "id-ID",
+            {
+
+                timeZone:
+                    "Asia/Jakarta",
+
+                hour:
+                    "2-digit",
+
+                minute:
+                    "2-digit",
+
+                second:
+                    "2-digit",
+
+                hour12:
+                    false
+
+            }
+        ).format(sekarang);
+
+
+    return {
+
+        tanggal,
+
+        waktu
+
+    };
+
+}
+
+
+/* =========================
+   JAM
+========================= */
+
+function updateJam() {
+
+    const waktu =
+        getWaktuWIB();
+
+
+    tanggalElement.textContent =
+        waktu.tanggal;
+
+
+    jamElement.textContent =
+        waktu.waktu;
+
+}
+
+
+updateJam();
+
+
+setInterval(
+    updateJam,
+    1000
+);
+
+
+/* =========================
+   SIMPAN
+========================= */
+
+function simpanData() {
+
+    localStorage.setItem(
+
+        "dataAbsensi",
+
+        JSON.stringify(
+            dataAbsensi
+        )
+
+    );
+
+}
+
+
+/* =========================
+   TAMPILKAN
+========================= */
+
+function tampilkanAbsensi() {
+
+
+    jumlahElement.textContent =
+        dataAbsensi.length;
+
+
+    if (
+        dataAbsensi.length === 0
+    ) {
+
+        daftarAbsensi.innerHTML = `
+
+            <div class="empty">
+
+                <div>
+                    📝
+                </div>
+
+                <p>
+                    Belum ada siswa yang absen
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    daftarAbsensi.innerHTML =
+        "";
+
+
+    dataAbsensi.forEach(
+        siswa => {
+
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "student";
+
+
+            const huruf =
+                siswa.nama
+                    .trim()
+                    .charAt(0)
+                    .toUpperCase();
+
+
+            item.innerHTML = `
+
+                <div class="avatar">
+
+                    ${huruf}
+
+                </div>
+
+
+                <div class="student-info">
+
+                    <strong>
+
+                        ${escapeHTML(
+                            siswa.nama
+                        )}
+
+                    </strong>
+
+
+                    <small>
+
+                        ${escapeHTML(
+                            siswa.kelas
+                        )}
+
+                        •
+
+                        ${escapeHTML(
+                            siswa.tanggal
+                        )}
+
+                        •
+
+                        ${escapeHTML(
+                            siswa.waktu
+                        )}
+
+                        WIB
+
+                    </small>
+
+                </div>
+
+
+                <div class="status">
+
+                    ${escapeHTML(
+                        siswa.status
+                    )}
+
+                </div>
+
+            `;
+
+
+            daftarAbsensi
+                .appendChild(item);
+
+        }
+    );
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================
+   CONFETTI 🎊
+========================= */
+
+function tampilkanConfetti() {
+
+
+    const warna = [
+
+        "#ff4757",
+        "#ffa502",
+        "#2ed573",
+        "#1e90ff",
+        "#a55eea",
+        "#ff6b81",
+        "#00d2d3"
+
+    ];
+
+
+    for (
+        let i = 0;
+        i < 120;
+        i++
+    ) {
+
+
+        const kertas =
+            document.createElement(
+                "div"
+            );
+
+
+        kertas.className =
+            "confetti";
+
+
+        kertas.style.left =
+            Math.random() * 100 +
+            "vw";
+
+
+        kertas.style.background =
+            warna[
+                Math.floor(
+                    Math.random() *
+                    warna.length
+                )
+            ];
+
+
+        kertas.style.width =
+            Math.random() * 8 + 6 +
+            "px";
+
+
+        kertas.style.height =
+            Math.random() * 12 + 8 +
+            "px";
+
+
+        kertas.style.animationDuration =
+            Math.random() * 2 + 2 +
+            "s";
+
+
+        kertas.style.animationDelay =
+            Math.random() * 0.5 +
+            "s";
+
+
+        document.body.appendChild(
+            kertas
+        );
+
+
+        setTimeout(
+            () => {
+
+                kertas.remove();
+
+            },
+
+            4000
+
+        );
+
+    }
+
+}
+
+
+/* =========================
+   PESAN
+========================= */
+
+function tampilkanPesan(
+    teks,
+    tipe
+) {
+
+
+    pesan.textContent =
+        teks;
+
+
+    pesan.className =
+        tipe;
+
+
+    setTimeout(
+       
