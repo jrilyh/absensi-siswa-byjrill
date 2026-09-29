@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -8,6 +8,52 @@
     <title>Absensi Siswa</title>
 
     <link rel="stylesheet" href="style.css">
+    <style>
+        .status-group {
+            margin: 20px 0;
+        }
+
+        .status-group > label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .status-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .status-option {
+            cursor: pointer;
+        }
+
+        .status-option input {
+            display: none;
+        }
+
+        .status-option span {
+            display: block;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            text-align: center;
+            background: #fff;
+            transition: 0.2s;
+        }
+
+        .status-option input:checked + span {
+            border-color: #4f46e5;
+            background: #eef2ff;
+            font-weight: 700;
+        }
+
+        @media (max-width: 480px) {
+            .status-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 
     <!-- EMAILJS -->
     <script
@@ -77,30 +123,33 @@
         </div>
 
 
-        <label class="attendance-check">
+        <div class="status-group">
+            <label>
+                <strong>Status Kehadiran</strong>
+            </label>
 
-            <input
-                type="checkbox"
-                id="hadir"
-            >
+            <div class="status-options">
+                <label class="status-option">
+                    <input type="radio" name="status" value="HADIR" checked>
+                    <span>✅ Hadir</span>
+                </label>
 
-            <span class="custom-check">
-                ✓
-            </span>
+                <label class="status-option">
+                    <input type="radio" name="status" value="SAKIT">
+                    <span>🤒 Sakit</span>
+                </label>
 
-            <span>
+                <label class="status-option">
+                    <input type="radio" name="status" value="IZIN">
+                    <span>📝 Izin</span>
+                </label>
 
-                <strong>
-                    Hadir
-                </strong>
-
-                <small>
-                    Saya menyatakan hadir hari ini
-                </small>
-
-            </span>
-
-        </label>
+                <label class="status-option">
+                    <input type="radio" name="status" value="ALPA">
+                    <span>❌ Alpa</span>
+                </label>
+            </div>
+        </div>
 
 
         <button id="btnKirim">
